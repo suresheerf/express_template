@@ -6,6 +6,7 @@ const appError = require('./utils/appError');
 
 const userRoutes = require('./routes/userRoutes');
 const globalErrHandler = require('./controllers/errorController');
+const logger = require('./utils/logger');
 
 const app = express();
 
@@ -13,7 +14,26 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(morgan('dev'));
+
+// middleware
+
+app.use(
+  morgan(
+    (tokens, req, res) =>
+      JSON.stringify({
+        method: tokens.method(req, res),
+        url: tokens.url(req, res),
+        status: Number.parseFloat(tokens.status(req, res)),
+        content_length: tokens.res(req, res, 'content-length'),
+        response_time: Number.parseFloat(tokens['response-time'](req, res)),
+      }),
+    {
+      stream: {
+        write: (message) => logger.info('accessLog', JSON.parse(message)),
+      },
+    }
+  )
+);
 
 app.use('/user', userRoutes);
 
