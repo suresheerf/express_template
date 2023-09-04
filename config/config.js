@@ -13,7 +13,7 @@ CONFIG.HOST = process.env.HOST;
 CONFIG.DBURI = process.env.DBURI || 'mongodb://127.0.0.1:27017';
 
 const checkDirectories = async () => {
-  const paths = ['./public'];
+  const paths = ['./public', './logs'];
   for (const path of paths) {
     if (!fs.existsSync(path)) {
       await fsPromise.mkdir(path, {
