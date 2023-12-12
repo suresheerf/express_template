@@ -1,5 +1,6 @@
-import winston from 'winston';
-import 'winston-daily-rotate-file';
+require('winston-daily-rotate-file');
+
+const winston = require('winston');
 
 const errorTransport = new winston.transports.DailyRotateFile({
   filename: 'application-error-%DATE%.log',
@@ -26,4 +27,4 @@ const logger = winston.createLogger({
   transports: [new winston.transports.Console(), errorTransport, combinedTransport],
 });
 
-export default logger;
+module.exports = logger;

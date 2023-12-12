@@ -2,10 +2,10 @@ const express = require('express');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const path = require('path');
-const appError = require('./utils/appError');
+const AppError = require('./utils/appError');
 
-const userRoutes = require('./routes/userRoutes');
-const globalErrHandler = require('./controllers/errorController');
+const userRoutes = require('./user/userRoutes');
+const globalErrHandler = require('./utils/errorHandler');
 const logger = require('./utils/logger');
 
 const app = express();
@@ -38,7 +38,7 @@ app.use(
 app.use('/user', userRoutes);
 
 app.all('*', (req, res, next) => {
-  next(new appError(`can't find ${req.originalUrl} on this server!`, 404));
+  next(new AppError(`can't find ${req.originalUrl} on this server!`, 404));
 });
 
 app.use(globalErrHandler);
