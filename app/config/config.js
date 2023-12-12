@@ -1,3 +1,4 @@
+/* eslint-disable security/detect-non-literal-fs-filename */
 require('dotenv').config();
 const fs = require('fs');
 const fsPromise = require('fs/promises');
@@ -14,13 +15,17 @@ CONFIG.DBURI = process.env.DBURI || 'mongodb://127.0.0.1:27017';
 
 const checkDirectories = async () => {
   const paths = ['./public', './logs'];
-  for (const path of paths) {
+  const promises = [];
+  paths.forEach((path) => {
     if (!fs.existsSync(path)) {
-      await fsPromise.mkdir(path, {
-        recursive: true,
-      });
+      promises.push(
+        fsPromise.mkdir(path, {
+          recursive: true,
+        })
+      );
     }
-  }
+  });
+  await Promise.all(promises);
 };
 checkDirectories();
 module.exports = CONFIG;
