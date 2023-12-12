@@ -20,4 +20,5 @@ mongoose
   });
 process.on('unhandledRejection', () => {
   console.log('unhandledRejection');
+  process.exit(1);
 });
